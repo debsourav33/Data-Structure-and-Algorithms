@@ -2,15 +2,28 @@
 using namespace std;
 
 //{
-#define fr(i,a,n) for(int i=a;i<n;i++)
-#define ull unsigned long long
-#define ll long long
+#define cel(n,k) ((n-1)/k+1)
+#define sets(a) memset(a, -1, sizeof(a))
+#define clr(a) memset(a, 0, sizeof(a))
+#define max(a,b) ((a)>(b)? (a):(b))
+#define min(a,b) ((a)<(b)? (a):(b))
+#define fr(n) for(int i=0;i<n;i++)
+#define fr1(n) for(int i=1;i<=n;i++)
 #define pb push_back
-#define MX 10000007
 #define all(v) v.begin(),v.end()
+#define mp make_pair
+#define ff first
+#define ss second
+#define INF 10000007
+
+typedef long l;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef pair<long long,long long> pll;
 //}
 
-string text, pat;
+string text, p;
 int pi[1000006];
 
 void prefix_function(){
@@ -18,27 +31,27 @@ void prefix_function(){
 
     pi[0]= now= -1;
 
-    fr(i,1,pat.length()){
-        while(now!=-1 && pat[i]!=pat[now+1])
+    for(int i=1; i<p.length();i++){
+        while(now!=-1 && p[i]!=p[now+1])
             now= pi[now];
 
-        if(pat[i]==pat[now+1])    pi[i]= ++now;
+        if(p[i]==p[now+1])    pi[i]= ++now;
         else    pi[i]= -1;
     }
 }
 
-int kmp(string text){
+int kmp(){
     int match=0, now;
     now= -1;
 
-    fr(i,0,text.length()){
-        while(now!=-1 && text[i]!=pat[now+1])
+    fr(text.length()){
+        while(now!=-1 && text[i]!=p[now+1])
             now= pi[now];
 
-        if(text[i]==pat[now+1])  ++now;
+        if(text[i]==p[now+1])  ++now;
         else  now= -1;
 
-        if(now==pat.length()-1){
+        if(now==p.length()-1){
             match++;
             now= pi[now];
         }
@@ -49,8 +62,8 @@ int kmp(string text){
 
 
 main(){
-    cin>>text>>pat;
+    cin>>text>>p;
 
     prefix_function();
-    cout<<kmp(text)<<endl;
+    cout<<kmp()<<endl;
 }

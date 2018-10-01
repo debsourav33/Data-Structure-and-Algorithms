@@ -8,6 +8,7 @@ using namespace std;
 #define max(a,b) ((a)>(b)? (a):(b))
 #define min(a,b) ((a)<(b)? (a):(b))
 #define fr(n) for(int i=0;i<n;i++)
+#define fr1(n) for(int i=1;i<=n;i++)
 #define pb push_back
 #define all(v) v.begin(),v.end()
 #define mp make_pair
@@ -23,7 +24,7 @@ typedef pair<long long,long long> pll;
 //}
 
 vector<int> v[100005];
-int visited[100005], parent[100005], n, edges, cycle=0;
+int vis[100005], parent[100005], n, edges, cycle=0;
 
 void reset(){
     clr(vis);
@@ -34,7 +35,7 @@ void dfs(int u){
     vis[u]= 1;
 
     fr(v[u].size()){
-        int node= v[u][i];
+        int nd= v[u][i];
         if(nd==parent[u]) continue;
 
         if(!vis[nd]){
@@ -57,14 +58,14 @@ main(){
 
     cin>>n>>edges;
 
-    fr(edges){
+    fr1(edges){
         cin>>a>>b;
 
         v[a].pb(b);
         v[b].pb(a);
     }
 
-    fr(n){
+    fr1(n){
         if(vis[i]==0)
             dfs(i);
     }

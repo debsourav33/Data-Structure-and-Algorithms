@@ -1,105 +1,117 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-vector<int> v[1000];
-int visited[1000], level[1000], path[1000], cycle=0;
+//{
+#define cel(n,k) ((n-1)/k+1)
+#define sets(a) memset(a, -1, sizeof(a))
+#define clr(a) memset(a, 0, sizeof(a))
+#define max(a,b) ((a)>(b)? (a):(b))
+#define min(a,b) ((a)<(b)? (a):(b))
+#define fr(n) for(int i=0;i<n;i++)
+#define fr1(n) for(int i=1;i<=n;i++)
+#define pb push_back
+#define all(v) v.begin(),v.end()
+#define mp make_pair
+#define ff first
+#define ss second
+#define INF 10000007
+
+typedef long l;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef pair<long long,long long> pll;
+//}
+
+
+vector<int> v[100005];
+int n, vis[100005], level[100005], edges, parent[100005], c[100005], d[100005], cycle=0;
 
 void reset(){
-    memset(visited, 0, sizeof(visited));
-    memset(level, 0, sizeof level);
-    memset(path, -1, sizeof path);
+    clr(vis);
+    clr(level);
+    sets(parent);
 }
-
 
 void bfs(int source){
     queue<int> q;
     q.push(source);
-    visited[source]= 1;
+    vis[source]= 1;
 
     while(!q.empty()){
         int u= q.front();
         q.pop();
 
+        int mark[100005];
+        clr(mark);
+
         for(int i=0;i<v[u].size();i++){
             int node= v[u][i];
 
-            if(!visited[node]){
-                visited[node]= 1;
+            if(!mark[c[node]]){
+                d[u]++;
+                mark[c[node]]= 1;
+            }
+
+            if(!vis[node]){
+                vis[node]= 1;
                 level[node]= level[u]+ 1;
-                path[node]= u;
+                parent[node]= u;
 
                 q.push(node);
             }
 
         }
+
     }
 
 }
 
-bool bipar= true;
-void bipartite(int source){
-    queue<int> q;
-    q.push(source);
-    visited[source]= 1;
 
-    while(!q.empty()){
-        int u= q.front();
-        q.pop();
-
-        for(int i=0;i<v[u].size();i++){
-            int node= v[u][i];
-
-            if(!visited[node]){
-                visited[node]= 1;
-                level[node]= level[u]+ 1;
-                path[node]= u;
-
-                q.push(node);
-            }
-
-            else{
-                if(level[u]%2==level[node]%2){
-                    bipar= false;
-                    return;
-                }
-            }
-
-        }
-    }
-
-}
-
-void print_path(int node){
+void print_parent(int node){
     if(node==-1)
         return;
 
-    print_path(path[node]);
+    print_parent(parent[node]);
     cout<<node<<" ";
 }
 
 main(){
     reset();
-    int a, b, n, edges;
+    int a, b;
 
     cin>>n>>edges;
 
-    for(int i=0;i<edges;i++){
+    fr1(n){
+        cin>>c[i];
+    }
+
+    fr1(edges){
         cin>>a>>b;
 
-        v[a].push_back(b);
-        //v[b].pb(a);
+        v[a].pb(b);
+        v[b].pb(a);
     }
 
-    bfs(0);
-
-    for(int i=0;i<n;i++){
-        cout<<i<<": ";
-
-        if(visited[i])
-            cout<<level[i]<<endl;
-        else
-            cout<<"Not Reachable"<<endl;
+    fr1(n){
+        if(vis[i]==0)
+            bfs(i);
     }
 
+    int col, maxi=0;
 
+    fr1(n){
+        cout<<d[i]<<endl;
+        if(d[i]>maxi){
+            maxi= d[i];
+            col= c[i];
+        }
+
+        if(d[i]==maxi){
+            if(c[i]<col)
+                col= c[i];
+        }
+    }
+
+    cout<<col<<endl;
 }
