@@ -1,7 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-
 //{
 #define si(a) scanf("%d",&a)
 #define sii(a,b) scanf("%d %d",&a,&b);
@@ -22,10 +21,10 @@ using namespace std;
 #define cel(n,k) ((n-1)/k+1)
 #define sets(a) memset(a, -1, sizeof(a))
 #define clr(a) memset(a, 0, sizeof(a))
-#define max(a,b) ((a)>(b)? (a):(b))
-#define min(a,b) ((a)<(b)? (a):(b))
 #define fr(n) for(int i=0;i<n;i++)
 #define fr1(n) for(int i=1;i<=n;i++)
+#define frj(n) for(int j=0;j<n;j++)
+#define frj1(n) for(int j=1;j<=n;j++)
 #define pb push_back
 #define all(v) v.begin(),v.end()
 #define mp make_pair
@@ -40,68 +39,69 @@ typedef pair<int,int> pii;
 typedef pair<long long,long long> pll;
 //}
 
-const int maxn= 2e5+5;
+const int maxn= 1e5+5;
 
+int vis[maxn],n,m,k, par[maxn], power[maxn], mini[maxn];
 vector<int> v[maxn];
-int n, vis[maxn], level[maxn], edges, parent[maxn];
 
 void reset(){
-    fr(n+1)  v[i].clear();
-
-    clr(vis);
-    clr(level);
-    sets(parent);
+    clr(par);
 }
 
-void bfs(int source){
-    queue<int> q;
-    q.push(source);
-    vis[source]= 1;
+int finds(int r)
+{
+    if (par[r]==r)
+        return r;
 
-    while(!q.empty())
-    {
-        int u= q.front();
-        q.pop();
+    int p= par[r];
+    par[r]= finds(p);
 
-        for(int node: v[u])
-        {
-            if(!vis[node]){
-                vis[node]= 1;
-                level[node]= level[u]+ 1;
-                parent[node]= u;
+    mini[r]= min(mini[r], mini[p]);
 
-                q.push(node);
-            }
+    return par[r];
+}
+
+void unions(int a, int b){
+    int p1= finds(a);
+    int p2= finds(b);
+
+    if(p1!=p2){
+        par[p2]= p1;
+
+        mini[b]= min(mini[b],mini[a]);
+    }
+}
+
+char s[5];
+
+void solve(){
+    sii(n,m);
+
+    fr1(n)  par[i]= i;
+
+    fr1(n)  si(power[i]);
+    fr1(n)  mini[i]= power[i];
+
+    char c;
+    int a, b, p;
+
+    fr(m){
+        scanf("%s",s);
+
+        if(s[0]=='?'){
+            si(a);
+            p= finds(a);
+            //outi(p);
+            outi(mini[a]);
         }
-
+        else{
+            sii(a,b);
+            unions(a,b);
+        }
     }
-
 }
 
-
-void print_parent(int node){
-    if(node==-1)
-        return;
-
-    print_parent(parent[node]);
-    cout<<node<<" ";
-}
-
-main(){
-    reset();
-    int a, b;
-
-    sii(n,edges);
-
-    fr1(edges){
-        sii(a,b);
-
-        v[a].pb(b);
-        v[b].pb(a);
-    }
-
-    fr1(n){
-        if(vis[i]==0)
-            bfs(i);
-    }
+int main()
+{
+    solve();
 }

@@ -1,7 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-
 //{
 #define si(a) scanf("%d",&a)
 #define sii(a,b) scanf("%d %d",&a,&b);
@@ -40,68 +39,30 @@ typedef pair<int,int> pii;
 typedef pair<long long,long long> pll;
 //}
 
-const int maxn= 2e5+5;
-
-vector<int> v[maxn];
-int n, vis[maxn], level[maxn], edges, parent[maxn];
-
-void reset(){
-    fr(n+1)  v[i].clear();
-
-    clr(vis);
-    clr(level);
-    sets(parent);
-}
-
-void bfs(int source){
-    queue<int> q;
-    q.push(source);
-    vis[source]= 1;
-
-    while(!q.empty())
-    {
-        int u= q.front();
-        q.pop();
-
-        for(int node: v[u])
-        {
-            if(!vis[node]){
-                vis[node]= 1;
-                level[node]= level[u]+ 1;
-                parent[node]= u;
-
-                q.push(node);
-            }
-        }
-
+int egcd(int a, int b, int &x, int &y){
+    if(!a){
+        x= 0, y=1;
+        return b;
     }
 
+    int x1,y1;
+    int d= egcd(b%a,a,x1,y1);
+
+    x= y1- (b/a)*x1;
+    y= x1;
+
+    return d;
 }
 
+int main(){
+    int a,b,x,y;
+    sii(a,b);
+    int gc= __gcd(a,b);
 
-void print_parent(int node){
-    if(node==-1)
-        return;
+    int tmp= egcd(a/gc,b/gc,x,y);
+    outi(tmp);
 
-    print_parent(parent[node]);
-    cout<<node<<" ";
-}
 
-main(){
-    reset();
-    int a, b;
 
-    sii(n,edges);
-
-    fr1(edges){
-        sii(a,b);
-
-        v[a].pb(b);
-        v[b].pb(a);
-    }
-
-    fr1(n){
-        if(vis[i]==0)
-            bfs(i);
-    }
+    outii(x,y);
 }

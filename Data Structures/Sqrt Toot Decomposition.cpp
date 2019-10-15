@@ -39,83 +39,70 @@ typedef pair<int,int> pii;
 typedef pair<long long,long long> pll;
 //}
 
-
-#define lefts 2*at
-#define rights 2*at+1
-
 const int N= 1e5+5;
+const int sN= 1e5+5;
 
-int n, a[N], sum[4*N];
+int n, m, k, Block, cnt[205][205][205], a[N];
 
-void merge(int at){
-    sum[at]= sum[lefts]+ sum[rights];
+void process_block(int no){
+    int st= no*Block, endi= (no+1)*Block;
+    endi= min(n,endi);
+
+    for(int i=st;i<endi;i++){
+        frj1(202){
+            int mod= a[i]%j;
+
+            cnt[no][j][mod]++;
+        }
+    }
 }
 
-void build(int at, int L, int R){
-    if(L==R){
-        sum[at]= a[L];
-        return;
+void preprocess(){
+    int no_of_blocks= cel(n,Block);
+
+    fr(no_of_blocks)  process_block(i);
+}
+
+void query1(int x, int y, int m, int q){
+    int st_block= x/Block, end_block= y/Block, ans= 0;
+
+    for(int i=st_block; i<=end_block; i++){
+        ans+= cnt[i][m][q];
     }
 
-    int mid= (L+R)/2;
+    int st= st_block*Block, endi= (end_block+1)*Block;
+    endi= min(n,endi);
 
-    build(lefts,L,mid);
-    build(rights,mid+1,R);
+    //outii(st,endi);
+    //outi(ans);
 
-    merge(at);
-}
-
-void update(int at, int L, int R, int pos, int val){
-    if(L==R){
-        sum[at]= val;
-        return;
+    for(int i=st; i<x;i++){
+        if(a[i]%m==q)  ans--;
     }
 
-    int mid= (L+R)/2;
-    if(pos<=mid)
-        update(lefts, L, mid, pos, val);
-    else
-        update(rights, mid+1, R, pos, val);
+    for(int i=y+1; i<endi;i++){
+        if(a[i]%m==q)  ans--;
+    }
 
-    merge(at);
+    outi(ans);
 }
 
-int query(int at, int L, int R, int l, int r){
-
-    if(r<L || l>R)  return 0;
-    if(l<=L && r>=R)  return sum[at];
-
-    int mid= (L+R)/2;
-
-    int x= query(lefts, L, mid, l, r);
-    int y= query(rights, mid+1, R, l, r);
-
-    return x+y;
-}
 
 main(){
-    int n, q;
-    sii(n,q);
+    int x,y,m,q, opt;
+    sii(n,opt);
+    Block= (int) sqrt(n)+1;
 
-    fr(n)
-        sl(a[i]);
+    fr(n)  si(a[i]);
 
-    build(1,0,n-1);
+    preprocess();
 
-    //update(1,1,n,4,11);
+    fr(opt){
+        sii(x,y);
+        sii(q,m);
+        --x, --y;
 
-    int x, a, b;
-    fr(q) {
-        si(x);
-
-        if(!x){
-            sii(a,b);
-            printf("%d\n",query(1,0,n-1,a-1,b-1));
-        }
-        else{
-            sii(a,b);
-            update(1,0,n-1,a-1,b);
-        }
+        query1(x,y,m,q);
     }
-
 }
+

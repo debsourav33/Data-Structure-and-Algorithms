@@ -88,4 +88,7 @@ bool match(ll a, ll b, ll i){
 
 main(){
     cout<<is_pow_of_2(4096)<<endl;
+
+    ll n= setbit(0,63);
+    cout<<n<<endl;
 }

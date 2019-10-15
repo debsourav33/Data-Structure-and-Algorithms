@@ -1,7 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-
 //{
 #define si(a) scanf("%d",&a)
 #define sii(a,b) scanf("%d %d",&a,&b);
@@ -22,10 +21,10 @@ using namespace std;
 #define cel(n,k) ((n-1)/k+1)
 #define sets(a) memset(a, -1, sizeof(a))
 #define clr(a) memset(a, 0, sizeof(a))
-#define max(a,b) ((a)>(b)? (a):(b))
-#define min(a,b) ((a)<(b)? (a):(b))
 #define fr(n) for(int i=0;i<n;i++)
 #define fr1(n) for(int i=1;i<=n;i++)
+#define frj(n) for(int j=0;j<n;j++)
+#define frj1(n) for(int j=1;j<=n;j++)
 #define pb push_back
 #define all(v) v.begin(),v.end()
 #define mp make_pair
@@ -40,68 +39,33 @@ typedef pair<int,int> pii;
 typedef pair<long long,long long> pll;
 //}
 
-const int maxn= 2e5+5;
+#include<ext/pb_ds/assoc_container.hpp>
+#include<ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
 
-vector<int> v[maxn];
-int n, vis[maxn], level[maxn], edges, parent[maxn];
+//less_equal(int) for multiset, less<int> for set
 
-void reset(){
-    fr(n+1)  v[i].clear();
-
-    clr(vis);
-    clr(level);
-    sets(parent);
-}
-
-void bfs(int source){
-    queue<int> q;
-    q.push(source);
-    vis[source]= 1;
-
-    while(!q.empty())
-    {
-        int u= q.front();
-        q.pop();
-
-        for(int node: v[u])
-        {
-            if(!vis[node]){
-                vis[node]= 1;
-                level[node]= level[u]+ 1;
-                parent[node]= u;
-
-                q.push(node);
-            }
-        }
-
-    }
-
-}
-
-
-void print_parent(int node){
-    if(node==-1)
-        return;
-
-    print_parent(parent[node]);
-    cout<<node<<" ";
-}
+typedef tree<int, null_type, less_equal<int>, rb_tree_tag,
+        tree_order_statistics_node_update>
+        ordered_set;
 
 main(){
-    reset();
-    int a, b;
+    ordered_set s;
+    s.insert(5);
+    s.insert(15);
+    s.insert(18);
+    s.insert(12);
+    s.insert(5);
 
-    sii(n,edges);
+    int ind= s.order_of_key(5);
+    outi(ind);
 
-    fr1(edges){
-        sii(a,b);
+    /*upper_bound - lower_bound*/
+    int val= 5;
+    int cnt= s.order_of_key(val+1)- s.order_of_key(val);
+    outi(val);
 
-        v[a].pb(b);
-        v[b].pb(a);
-    }
 
-    fr1(n){
-        if(vis[i]==0)
-            bfs(i);
-    }
+    val= *s.find_by_order(1);
+    outi(val);
 }

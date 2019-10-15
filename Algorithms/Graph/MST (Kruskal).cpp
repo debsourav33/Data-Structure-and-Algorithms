@@ -41,47 +41,82 @@ typedef pair<long long,long long> pll;
 
 const int maxn= 1e5+5;
 
+struct edge {
+    int u, v, w;
+    bool operator<(const edge& p) const
+    {
+        return w < p.w;
+    }
+};
+
+int vis[maxn],n,m,k, par[maxn];
 vector<int> v[maxn];
-int vis[maxn], parent[maxn], n, edges, cycle=0;
+vector<edge> edges;
+map<pii,i64> weight;
 
 void reset(){
-    clr(vis);
-    sets(parent);
+    fr1(n)  v[i].clear();
+    edges.clear();
+    clr(par);
 }
 
-void dfs(int u){
-    vis[u]= 1;
+int finds(int r)
+{
+    if (par[r]==r)
+        return r;
+    return par[r]= finds(par[r]);
+}
 
-    fr(v[u].size()){
-        int nd= v[u][i];
-        if(nd==parent[u]) continue;
+i64 mst(int n)
+{
+    sort(edges.begin(), edges.end());
+    for (int i = 1; i <= n; i++)
+        par[i] = i;
 
-        if(!vis[nd]){
-            parent[nd]= u;
-            dfs(nd);
+    i64 count = 0, s = 0;
+    for(edge e: edges){
+        int x = finds(e.u);
+        int y = finds(e.v);
+        int w = e.w;
+
+        if (x != y) {
+            v[e.u].pb(e.v);
+            v[e.v].pb(e.u);
+
+            weight[mp(e.u,e.v)]= w;
+            weight[mp(e.v,e.u)]= w;
+
+            par[x] = y;
+            count++;
+            s += e.w;
+            if (count == n - 1)
+                break;
         }
     }
 
+    return s;
+}
+
+void input(){
+    sii(n,m);
+    fr(m) {
+        int x, y, w;
+        siii(x,y,w);
+        edge e;
+        e.u = x;
+        e.v = y;
+        e.w = w;
+        edges.pb(e);
+    }
+
 
 }
 
-main(){
+int main()
+{
+
     reset();
-    int a, b;
+    input();
 
-    sii(n,edges);
-
-    fr1(edges){
-        sii(a,b);
-
-        v[a].pb(b);
-        v[b].pb(a);
-    }
-
-    fr1(n){
-        if(!vis[i])
-            dfs(i);
-    }
-
-    
+    outi(mst(n));
 }

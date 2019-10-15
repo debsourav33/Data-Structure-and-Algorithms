@@ -39,83 +39,98 @@ typedef pair<int,int> pii;
 typedef pair<long long,long long> pll;
 //}
 
+const int maxn= 2e5+5;
 
 #define lefts 2*at
 #define rights 2*at+1
 
-const int N= 1e5+5;
+int lazy[4*maxn], maxi[4*maxn], n, l[maxn], r[maxn], a[maxn];
 
-int n, a[N], sum[4*N];
-
-void merge(int at){
-    sum[at]= sum[lefts]+ sum[rights];
+void marge(int at){
+    maxi[at]= max(maxi[lefts],maxi[rights]);
 }
 
-void build(int at, int L, int R){
-    if(L==R){
-        sum[at]= a[L];
+void build(int at, int l, int r){
+    if(l==r){
+        maxi[at]= a[l];
         return;
     }
 
-    int mid= (L+R)/2;
+    int mid= (l+r)/2;
 
-    build(lefts,L,mid);
-    build(rights,mid+1,R);
-
-    merge(at);
+    build(lefts,l,mid);
+    build(rights,mid+1,r);
+    marge(at);
 }
 
-void update(int at, int L, int R, int pos, int val){
-    if(L==R){
-        sum[at]= val;
+void upd(int at, int x){
+    lazy[at]+= x;
+    maxi[at]+= x;
+
+}
+
+void propagate(int at){
+    upd(lefts, lazy[at]);
+    upd(rights, lazy[at]);
+
+    lazy[at]= 0;
+}
+
+void update(int at, int l, int r, int x, int y, int val){
+    if(x<=l && r<=y){
+        lazy[at]+= val;
+        maxi[at]+= val;
         return;
     }
 
-    int mid= (L+R)/2;
-    if(pos<=mid)
-        update(lefts, L, mid, pos, val);
-    else
-        update(rights, mid+1, R, pos, val);
+    if(x>r || y<l)  return;
 
-    merge(at);
+    if(lazy[at]) propagate(at);
+
+    int mid= (l+r)/2;
+
+    update(lefts,l,mid,x,y,val);
+    update(rights,mid+1,r,x,y,val);
+    marge(at);
 }
 
-int query(int at, int L, int R, int l, int r){
+int query(int at, int l, int r, int x, int y){
+    if(x<=l && r<=y){
+        return maxi[at];
+    }
 
-    if(r<L || l>R)  return 0;
-    if(l<=L && r>=R)  return sum[at];
+    if(x>r || y<l)  return -1e9;
 
-    int mid= (L+R)/2;
+    if(lazy[at]) propagate(at);
 
-    int x= query(lefts, L, mid, l, r);
-    int y= query(rights, mid+1, R, l, r);
+    int mid= (l+r)/2;
+    int a= query(lefts,l,mid,x,y);
+    int b= query(rights,mid+1,r,x,y);
 
-    return x+y;
+    return max(a,b);
 }
 
 main(){
-    int n, q;
+    int q,x,y,l,r;
     sii(n,q);
-
-    fr(n)
-        sl(a[i]);
+    fr(n)  si(a[i]);
 
     build(1,0,n-1);
 
-    //update(1,1,n,4,11);
-
-    int x, a, b;
-    fr(q) {
+    while(q--){
         si(x);
 
-        if(!x){
-            sii(a,b);
-            printf("%d\n",query(1,0,n-1,a-1,b-1));
+        if(x==1){
+            sii(x,y);
+            --x, --y;
+            outi(query(1,0,n-1,x,y));
         }
         else{
-            sii(a,b);
-            update(1,0,n-1,a-1,b);
+            siii(l,r,x);
+            --l, --r;
+            update(1,0,n-1,l,r,x);
         }
     }
+
 
 }

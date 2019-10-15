@@ -1,7 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-
 //{
 #define si(a) scanf("%d",&a)
 #define sii(a,b) scanf("%d %d",&a,&b);
@@ -22,10 +21,10 @@ using namespace std;
 #define cel(n,k) ((n-1)/k+1)
 #define sets(a) memset(a, -1, sizeof(a))
 #define clr(a) memset(a, 0, sizeof(a))
-#define max(a,b) ((a)>(b)? (a):(b))
-#define min(a,b) ((a)<(b)? (a):(b))
 #define fr(n) for(int i=0;i<n;i++)
 #define fr1(n) for(int i=1;i<=n;i++)
+#define frj(n) for(int j=0;j<n;j++)
+#define frj1(n) for(int j=1;j<=n;j++)
 #define pb push_back
 #define all(v) v.begin(),v.end()
 #define mp make_pair
@@ -40,68 +39,87 @@ typedef pair<int,int> pii;
 typedef pair<long long,long long> pll;
 //}
 
-const int maxn= 2e5+5;
+const int maxn= 1e5+5;
 
-vector<int> v[maxn];
-int n, vis[maxn], level[maxn], edges, parent[maxn];
+vector<int> t[maxn], v[maxn];
+int vis[maxn], parent[maxn], n, m;
+stack<int> st;
 
 void reset(){
-    fr(n+1)  v[i].clear();
-
     clr(vis);
-    clr(level);
     sets(parent);
 }
 
-void bfs(int source){
-    queue<int> q;
-    q.push(source);
-    vis[source]= 1;
+void dfs(int u){
+    vis[u]= 1;
 
-    while(!q.empty())
-    {
-        int u= q.front();
-        q.pop();
+    fr(v[u].size()){
+        int nd= v[u][i];
+        if(nd==parent[u]) continue;
 
-        for(int node: v[u])
-        {
-            if(!vis[node]){
-                vis[node]= 1;
-                level[node]= level[u]+ 1;
-                parent[node]= u;
-
-                q.push(node);
-            }
+        if(!vis[nd]){
+            parent[nd]= u;
+            dfs(nd);
         }
+    }
 
+    st.push(u);
+}
+
+void scc(int u){
+    vis[u]= 1;
+    outis(u);
+
+    fr(t[u].size()){
+        int nd= t[u][i];
+        if(nd==parent[u]) continue;
+
+        if(!vis[nd]){
+            parent[nd]= u;
+            scc(nd);
+        }
     }
 
 }
 
-
-void print_parent(int node){
-    if(node==-1)
-        return;
-
-    print_parent(parent[node]);
-    cout<<node<<" ";
-}
 
 main(){
-    reset();
-    int a, b;
+    int a,b;
 
-    sii(n,edges);
+    sii(n,m);
 
-    fr1(edges){
+    fr(m){
         sii(a,b);
 
-        v[a].pb(b);
-        v[b].pb(a);
+        v[a].push_back(b);
+        t[b].push_back(a);
     }
 
+    reset();
+
     fr1(n){
-        if(vis[i]==0)
-            bfs(i);
+        if(!vis[i])
+            dfs(i);
+    }
+
+    reset();
+    while(!st.empty()){
+        int i=st.top();
+        st.pop();
+
+        if(!vis[i]) {
+            printf("\n");
+            scc(i);
+        }
     }
 }
+
+/*
+8 14
+1 2 2 3 3 4 4 3
+5 1 5 6 2 5
+6 7 7 6
+7 8 8 8
+3 7 4 8
+2 6
+ */

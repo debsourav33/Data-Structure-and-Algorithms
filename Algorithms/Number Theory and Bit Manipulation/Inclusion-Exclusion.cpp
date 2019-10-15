@@ -1,7 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-
 //{
 #define si(a) scanf("%d",&a)
 #define sii(a,b) scanf("%d %d",&a,&b);
@@ -22,10 +21,10 @@ using namespace std;
 #define cel(n,k) ((n-1)/k+1)
 #define sets(a) memset(a, -1, sizeof(a))
 #define clr(a) memset(a, 0, sizeof(a))
-#define max(a,b) ((a)>(b)? (a):(b))
-#define min(a,b) ((a)<(b)? (a):(b))
 #define fr(n) for(int i=0;i<n;i++)
 #define fr1(n) for(int i=1;i<=n;i++)
+#define frj(n) for(int j=0;j<n;j++)
+#define frj1(n) for(int j=1;j<=n;j++)
 #define pb push_back
 #define all(v) v.begin(),v.end()
 #define mp make_pair
@@ -40,68 +39,57 @@ typedef pair<int,int> pii;
 typedef pair<long long,long long> pll;
 //}
 
-const int maxn= 2e5+5;
+#define lefts 2*at
+#define rights 2*at+1
 
-vector<int> v[maxn];
-int n, vis[maxn], level[maxn], edges, parent[maxn];
+const int N= 1e5+5;
 
-void reset(){
-    fr(n+1)  v[i].clear();
+vector<pll> d;
+vector<i64> preds;
 
-    clr(vis);
-    clr(level);
-    sets(parent);
-}
+void call(int pos, i64 curr, i64 cnt){
+    if(pos==preds.size()){
 
-void bfs(int source){
-    queue<int> q;
-    q.push(source);
-    vis[source]= 1;
-
-    while(!q.empty())
-    {
-        int u= q.front();
-        q.pop();
-
-        for(int node: v[u])
-        {
-            if(!vis[node]){
-                vis[node]= 1;
-                level[node]= level[u]+ 1;
-                parent[node]= u;
-
-                q.push(node);
-            }
-        }
-
+        d.pb(mp(curr,cnt%2));  //cnt%2==1 means inclusion, cnt%2==0 means exclusion
+        return;
     }
 
-}
-
-
-void print_parent(int node){
-    if(node==-1)
-        return;
-
-    print_parent(parent[node]);
-    cout<<node<<" ";
+    i64 lcm= (curr*preds[pos])/__gcd(curr,preds[pos]);
+    call(pos+1,curr,cnt);
+    call(pos+1,lcm,cnt+1);
 }
 
 main(){
-    reset();
-    int a, b;
+    /*fr(preds.size())
+        call(i+1,preds[i],1); */
 
-    sii(n,edges);
+    int opt, n, m;
+    i64 a;
+    si(opt);
 
-    fr1(edges){
-        sii(a,b);
+    frj(opt) {
+        d.clear();
+        preds.clear();
 
-        v[a].pb(b);
-        v[b].pb(a);
-    }
+        sii(n,m);
+        fr(m) {
+            sl(a);
+            preds.pb(a);
+        }
 
-    fr1(n){
-        if(vis[i]==0)
-            bfs(i);
+        fr(preds.size())
+            call(i+1,preds[i],1);
+
+        i64 cnt= n;
+        fr(d.size()){
+            i64 f= d[i].ff, s= d[i].ss;
+
+            if(s%2)
+                cnt-= n/f;
+            else
+                cnt+= n/f;
+        }
+
+        printf("Case %d: %lld\n",j+1,cnt);
     }
 }

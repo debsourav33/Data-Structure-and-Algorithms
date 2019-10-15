@@ -10,21 +10,13 @@ using namespace std;
 #define sll(a,b) scanf("%lld %lld",&a,&b);
 #define slll(a,b,c) scanf("%lld %lld %lld",&a,&b,&c);
 
-#define outi(a) printf("%d\n",a)
-#define outii(a,b) printf("%d %d\n",a,b)
-#define outis(a) printf(" %d",a)
-
-#define outl(a) printf("%lld\n",a)
-#define outll(a,b) printf("%lld %lld\n",a,b)
-#define outls(a) printf(" %lld",a)
-
 #define cel(n,k) ((n-1)/k+1)
 #define sets(a) memset(a, -1, sizeof(a))
 #define clr(a) memset(a, 0, sizeof(a))
+#define max(a,b) ((a)>(b)? (a):(b))
+#define min(a,b) ((a)<(b)? (a):(b))
 #define fr(n) for(int i=0;i<n;i++)
 #define fr1(n) for(int i=1;i<=n;i++)
-#define frj(n) for(int j=0;j<n;j++)
-#define frj1(n) for(int j=1;j<=n;j++)
 #define pb push_back
 #define all(v) v.begin(),v.end()
 #define mp make_pair
@@ -39,49 +31,30 @@ typedef pair<int,int> pii;
 typedef pair<long long,long long> pll;
 //}
 
-const int maxn= 1e5+5;
+int n, phi[100005], mark[100005];
 
-vector<int> v[maxn];
-int vis[maxn], parent[maxn], n, edges, cycle=0;
+void sievephi(int n){
+    fr1(n)  phi[i]= i;
 
-void reset(){
-    clr(vis);
-    sets(parent);
-}
+    mark[1]= 1;
+    phi[1]= 1;
 
-void dfs(int u){
-    vis[u]= 1;
+    for(int i=2;i<=n;i++){
+        if(mark[i])  continue;
 
-    fr(v[u].size()){
-        int nd= v[u][i];
-        if(nd==parent[u]) continue;
-
-        if(!vis[nd]){
-            parent[nd]= u;
-            dfs(nd);
+        for(int j=i;j<=n;j+=i){
+            mark[j]= 1;
+            phi[j]= phi[j]- phi[j]/i;
         }
     }
-
-
 }
 
 main(){
-    reset();
-    int a, b;
+    si(n);
 
-    sii(n,edges);
+    sievephi(n);
 
-    fr1(edges){
-        sii(a,b);
-
-        v[a].pb(b);
-        v[b].pb(a);
+    fr1(30){
+        cout<<i<<": "<<phi[i]<<endl;
     }
-
-    fr1(n){
-        if(!vis[i])
-            dfs(i);
-    }
-
-    
 }

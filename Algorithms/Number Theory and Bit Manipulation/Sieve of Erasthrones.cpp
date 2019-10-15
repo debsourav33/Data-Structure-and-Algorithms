@@ -10,21 +10,13 @@ using namespace std;
 #define sll(a,b) scanf("%lld %lld",&a,&b);
 #define slll(a,b,c) scanf("%lld %lld %lld",&a,&b,&c);
 
-#define outi(a) printf("%d\n",a)
-#define outii(a,b) printf("%d %d\n",a,b)
-#define outis(a) printf(" %d",a)
-
-#define outl(a) printf("%lld\n",a)
-#define outll(a,b) printf("%lld %lld\n",a,b)
-#define outls(a) printf(" %lld",a)
-
 #define cel(n,k) ((n-1)/k+1)
 #define sets(a) memset(a, -1, sizeof(a))
 #define clr(a) memset(a, 0, sizeof(a))
+#define max(a,b) ((a)>(b)? (a):(b))
+#define min(a,b) ((a)<(b)? (a):(b))
 #define fr(n) for(int i=0;i<n;i++)
 #define fr1(n) for(int i=1;i<=n;i++)
-#define frj(n) for(int j=0;j<n;j++)
-#define frj1(n) for(int j=1;j<=n;j++)
 #define pb push_back
 #define all(v) v.begin(),v.end()
 #define mp make_pair
@@ -39,49 +31,38 @@ typedef pair<int,int> pii;
 typedef pair<long long,long long> pll;
 //}
 
-const int maxn= 1e5+5;
+bool mark[1000006];
+vector <int> primes;
 
-vector<int> v[maxn];
-int vis[maxn], parent[maxn], n, edges, cycle=0;
+void sieve(int n){
+    int limit= sqrt(n)+2;
+    mark[0]= mark[1]= 1;
 
-void reset(){
-    clr(vis);
-    sets(parent);
-}
+    primes.pb(2);
 
-void dfs(int u){
-    vis[u]= 1;
+    for(int i=4; i<n; i+=2)
+        mark[i]= 1;
 
-    fr(v[u].size()){
-        int nd= v[u][i];
-        if(nd==parent[u]) continue;
+    for(int i=3; i<n; i+=2){
+        if(mark[i])
+            continue;
 
-        if(!vis[nd]){
-            parent[nd]= u;
-            dfs(nd);
+        primes.pb(i);
+
+        if(i<limit){
+            for(int j=i*i; j<n; j+=i*2){
+                mark[j]=1;
+            }
         }
-    }
 
+    }
 
 }
 
 main(){
-    reset();
-    int a, b;
+    sieve(1000006);
 
-    sii(n,edges);
+    fr(primes.size())
+        cout<<primes[i]<<" ";
 
-    fr1(edges){
-        sii(a,b);
-
-        v[a].pb(b);
-        v[b].pb(a);
-    }
-
-    fr1(n){
-        if(!vis[i])
-            dfs(i);
-    }
-
-    
 }

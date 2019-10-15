@@ -39,49 +39,81 @@ typedef pair<int,int> pii;
 typedef pair<long long,long long> pll;
 //}
 
-const int maxn= 1e5+5;
+#define BLOCK 555 // ~sqrt(N)
 
-vector<int> v[maxn];
-int vis[maxn], parent[maxn], n, edges, cycle=0;
+const int maxn= 3e4+5;
+const int A= 1e6+6;
 
-void reset(){
-    clr(vis);
-    sets(parent);
+int cnt[A], a[maxn], ans[200005], answer = 0;
+
+struct node {
+	int L, R, i;
+}q[200005];
+
+bool cmp(node x, node y) {
+	if(x.L/BLOCK != y.L/BLOCK) {
+		// different blocks, so sort by block.
+		return x.L/BLOCK < y.L/BLOCK;
+	}
+	// same block, so sort by R value
+	return x.R < y.R;
 }
 
-void dfs(int u){
-    vis[u]= 1;
-
-    fr(v[u].size()){
-        int nd= v[u][i];
-        if(nd==parent[u]) continue;
-
-        if(!vis[nd]){
-            parent[nd]= u;
-            dfs(nd);
-        }
-    }
-
-
+void add(int position) {
+	cnt[a[position]]++;
+	if(cnt[a[position]] == 1) {
+		answer++;
+	}
 }
 
-main(){
-    reset();
-    int a, b;
+void remove(int position) {
+	cnt[a[position]]--;
+	if(cnt[a[position]] == 0) {
+		answer--;
+	}
+}
 
-    sii(n,edges);
+int main() {
+	int n;
+	si(n);
+	fr(n)
+		si(a[i]);
 
-    fr1(edges){
-        sii(a,b);
+	int m;
+	si(m);
+	fr(m){
+		sii(q[i].L, q[i].R);
+		q[i].L--; q[i].R--;
+		q[i].i = i;
+	}
 
-        v[a].pb(b);
-        v[b].pb(a);
-    }
+	sort(q, q + m, cmp);
 
-    fr1(n){
-        if(!vis[i])
-            dfs(i);
-    }
+	int currentL = 0, currentR = 0;
+	fr(m) {
+		int L = q[i].L, R = q[i].R;
+		while(currentL > L) {
+			add(currentL-1);
+			currentL--;
+		}
 
-    
+		while(currentR <= R) {
+			add(currentR);
+			currentR++;
+		}
+
+		while(currentL < L) {
+			remove(currentL);
+			currentL++;
+		}
+
+		while(currentR > R+1) {
+			remove(currentR-1);
+			currentR--;
+		}
+		ans[q[i].i] = answer;
+	}
+
+	fr(m)
+		outi(ans[i]);
 }

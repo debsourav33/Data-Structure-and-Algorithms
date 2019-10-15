@@ -1,7 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-
 //{
 #define si(a) scanf("%d",&a)
 #define sii(a,b) scanf("%d %d",&a,&b);
@@ -22,10 +21,10 @@ using namespace std;
 #define cel(n,k) ((n-1)/k+1)
 #define sets(a) memset(a, -1, sizeof(a))
 #define clr(a) memset(a, 0, sizeof(a))
-#define max(a,b) ((a)>(b)? (a):(b))
-#define min(a,b) ((a)<(b)? (a):(b))
 #define fr(n) for(int i=0;i<n;i++)
 #define fr1(n) for(int i=1;i<=n;i++)
+#define frj(n) for(int j=0;j<n;j++)
+#define frj1(n) for(int j=1;j<=n;j++)
 #define pb push_back
 #define all(v) v.begin(),v.end()
 #define mp make_pair
@@ -40,68 +39,47 @@ typedef pair<int,int> pii;
 typedef pair<long long,long long> pll;
 //}
 
-const int maxn= 2e5+5;
+const int N= 1e3+5;
 
-vector<int> v[maxn];
-int n, vis[maxn], level[maxn], edges, parent[maxn];
+vector<i64> bnum;
+char digits[55];
 
-void reset(){
-    fr(n+1)  v[i].clear();
+void convertFromDecimal(i64 num, i64 b){
+    if(!num)  return;
 
-    clr(vis);
-    clr(level);
-    sets(parent);
+    i64 m= num%b;
+    convertFromDecimal(num/b,b);
+
+    bnum.pb(m);
 }
 
-void bfs(int source){
-    queue<int> q;
-    q.push(source);
-    vis[source]= 1;
+i64 convertToDecimal(i64 b){
+    i64 val= 0, m=1, n= strlen(digits);
 
-    while(!q.empty())
-    {
-        int u= q.front();
-        q.pop();
+    for(i64 i=n-1; i>=0;i--){
+        i64 curr= digits[i]-'0';
 
-        for(int node: v[u])
-        {
-            if(!vis[node]){
-                vis[node]= 1;
-                level[node]= level[u]+ 1;
-                parent[node]= u;
+        if(digits[i]>='A')  curr= 10+digits[i]-'A';
 
-                q.push(node);
-            }
-        }
-
+        val+= curr*m;
+        m*=b;
     }
 
-}
-
-
-void print_parent(int node){
-    if(node==-1)
-        return;
-
-    print_parent(parent[node]);
-    cout<<node<<" ";
+    return val;
 }
 
 main(){
-    reset();
-    int a, b;
+    i64 n, b;
+    scanf("%s",digits);
+    sl(b);
 
-    sii(n,edges);
+    i64 dec= convertToDecimal(b);
+    outl(dec);
 
-    fr1(edges){
-        sii(a,b);
 
-        v[a].pb(b);
-        v[b].pb(a);
-    }
+    sll(n,b);
+    convertFromDecimal(n,b);
 
-    fr1(n){
-        if(vis[i]==0)
-            bfs(i);
-    }
+    for(i64 nm: bnum)  cout<<nm;
+
 }
