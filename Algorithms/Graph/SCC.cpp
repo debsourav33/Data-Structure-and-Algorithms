@@ -41,47 +41,71 @@ typedef pair<long long,long long> pll;
 
 const int maxn= 1e5+5;
 
-vector<int> t[maxn], v[maxn];
-int vis[maxn], parent[maxn], n, m;
+vector<int> t[maxn], v[maxn],  gr[maxn], comp_v[maxn], comp_t[maxn];
+int vis[maxn], g_par[maxn], n, m, group=0;
 stack<int> st;
 
 void reset(){
+    fr(maxn){
+        v[i].clear();
+        t[i].clear();
+        comp_v[i].clear();
+        comp_t[i].clear();
+        gr[i].clear();
+    }
+
     clr(vis);
-    sets(parent);
+    sets(g_par);
+    group= 0;
+
 }
 
-void dfs(int u){
+void dfs(int u, int p){
     vis[u]= 1;
 
     fr(v[u].size()){
         int nd= v[u][i];
-        if(nd==parent[u]) continue;
+        if(nd==p) continue;
 
-        if(!vis[nd]){
-            parent[nd]= u;
-            dfs(nd);
-        }
+        if(!vis[nd])
+            dfs(nd,u);
     }
 
     st.push(u);
 }
 
-void scc(int u){
+void scc(int u, int p){
     vis[u]= 1;
-    outis(u);
+    gr[group].pb(u);
+    g_par[u]= group;
 
     fr(t[u].size()){
         int nd= t[u][i];
-        if(nd==parent[u]) continue;
+        if(nd==p) continue;
 
-        if(!vis[nd]){
-            parent[nd]= u;
-            scc(nd);
-        }
+        if(!vis[nd])
+            scc(nd,u);
     }
 
 }
 
+void comp_dfs(int u, int p){
+    vis[u]= 1;
+
+    for(int nd: v[u]){
+        if(nd==p) continue;
+
+        int g1= g_par[u], g2= g_par[nd];
+
+        if(g1!=g2){
+            comp_v[g1].pb(g2);
+            comp_t[g2].pb(g1);
+        }
+
+        if(!vis[nd])
+            comp_dfs(nd,u);
+    }
+}
 
 main(){
     int a,b;
@@ -95,23 +119,46 @@ main(){
         t[b].push_back(a);
     }
 
-    reset();
-
+    clr(vis);
     fr1(n){
         if(!vis[i])
-            dfs(i);
+            dfs(i,-1);
     }
 
-    reset();
+    clr(vis);
     while(!st.empty()){
         int i=st.top();
         st.pop();
 
         if(!vis[i]) {
-            printf("\n");
-            scc(i);
+            scc(i,-1);
+            group++;
         }
     }
+
+    clr(vis);
+    fr1(n){
+        if(!vis[i])
+            comp_dfs(i,-1);
+    }
+
+    /*
+    fr(group){
+        outi(i);
+
+        for(int u: gr[i])  outis(u);
+        puts("");
+    }
+     */
+
+    fr(group){
+        outi(i);
+
+        for(int u: comp_v[i])  outis(u);
+        puts("");
+    }
+
+    reset();
 }
 
 /*
