@@ -39,69 +39,32 @@ typedef pair<int,int> pii;
 typedef pair<long long,long long> pll;
 //}
 
-const int N= 1e7+5;
+const int N= 1e3+5;
 
-bool mark[N];
-vector <i64> primes;
+int a[N][N], pre[N][N], m, n;
 
-void sieve(i64 n){
-    i64 limit= sqrt(n)+2;
-    mark[0]= mark[1]= 1;
+void calc(){
+    clr(pre);
 
-    primes.pb(2);
-
-    for(i64 i=4; i<n; i+=2)
-        mark[i]= true;
-
-    for(i64 i=3; i<n; i+=2){
-        if(mark[i])
-            continue;
-
-        primes.pb(i);
-
-        if(i<limit){
-            for(i64 j=i*i; j<n; j+=i*2){
-                mark[j]=1;
-            }
-        }
-
-    }
+    fr1(m)
+        frj1(n)
+            pre[i][j]= pre[i][j-1]+ pre[i-1][j]- pre[i-1][j-1]+ a[i][j];
 }
 
-int segmented_sieve(i64 a, i64 b){
-    clr(mark);
-
-    int cnt= 0;
-    for(i64 p: primes){
-        i64 st= a+ (p-(a%p))%p;
-
-        if(p>sqrt(b))
-            continue;
-
-        for(i64 i=st;i<=b;i+=p){
-            if(i==p)  continue;
-
-            mark[i-a]= true;
-        }
-    }
-
-    for(i64 i=a;i<=b;i++)   if(i>1 && !mark[i-a])  cnt++;
-    return cnt;
+int get_sum(int a, int b, int c, int d){
+    return pre[c][d]- pre[a-1][d]- pre[c][b-1]+ pre[a-1][b-1];
 }
 
 main(){
-    sieve(N-1);
+    clr(a);
+    sii(m,n);
 
-    int opt, x, cas= 1;
-    i64 a, b;
-    si(opt);
+    fr1(m)
+        frj1(n)
+            si(a[i][j]);
 
-    while(opt--){
-        sll(a,b);
-
-        int cnt= segmented_sieve(a,b);
-        printf("Case %d: %d\n",cas++,cnt);
-    }
+    calc();
+    outi(get_sum(2,2,4,5));
 
 
 }

@@ -74,8 +74,10 @@ void dijakstra(i64 source){
 
     while(!q.empty()){
         cnt++;
-        i64 u= q.top().ver;
+        i64 u= q.top().ver, cost= q.top().cost;
         q.pop();
+
+        if(dist[u]!=cost) continue;
 
         fr(v[u].size()){
             i64 nd= v[u][i].ver;
