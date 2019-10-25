@@ -89,7 +89,8 @@ i64 sub_hash(char s[], int i, int j){
     i64 a= 0, b= pre_hash[j];
     if(i!=0)  a= pre_hash[i-1];
 
-    i64 sub_hashvalue= (b-a) * mod_inv_p[i];
+    i64 diff= (b-a+m) % m;
+    i64 sub_hashvalue= diff * mod_inv_p[i];
 
     return sub_hashvalue % m;
 }
