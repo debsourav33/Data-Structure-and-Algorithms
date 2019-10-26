@@ -21,10 +21,10 @@ using namespace std;
 #define cel(n,k) ((n-1)/k+1)
 #define sets(a) memset(a, -1, sizeof(a))
 #define clr(a) memset(a, 0, sizeof(a))
-#define fr(n) for(i64 i=0;i<n;i++)
-#define fr1(n) for(i64 i=1;i<=n;i++)
-#define frj(n) for(i64 j=0;j<n;j++)
-#define frj1(n) for(i64 j=1;j<=n;j++)
+#define fr(n) for(int i=0;i<n;i++)
+#define fr1(n) for(int i=1;i<=n;i++)
+#define frj(n) for(int j=0;j<n;j++)
+#define frj1(n) for(int j=1;j<=n;j++)
 #define pb push_back
 #define all(v) v.begin(),v.end()
 #define mp make_pair
@@ -43,6 +43,7 @@ const int N= 1e5+5, m= 1e9+9, p= 31;
 
 char s[N], t[N];
 i64 pre_hash[N], pow_p[N], mod_inv_p[N];
+int n;
 
 i64 compute_hash(char s[]) {
     i64 hash_value = 0;
@@ -97,6 +98,8 @@ i64 sub_hash(char s[], int i, int j){
 
 main(){
     scanf("%s",s);
+    n= strlen(s);
+
     i64 hash1= compute_hash(s);
     pre_calc();
 

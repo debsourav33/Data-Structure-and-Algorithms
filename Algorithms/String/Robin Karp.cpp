@@ -58,5 +58,4 @@ main(){
     cin>>s>>pattern;
 
     cout<<match(s,pattern)<<endl;
-
 }
