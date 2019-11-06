@@ -31,7 +31,9 @@ typedef pair<int,int> pii;
 typedef pair<long long,long long> pll;
 //}
 
-int n, phi[100005], mark[100005];
+const int N= 1e5+5;
+
+int n, phi[N], mark[N];
 
 void sievephi(int n){
     fr1(n)  phi[i]= i;
@@ -47,6 +49,18 @@ void sievephi(int n){
             phi[j]= phi[j]- phi[j]/i;
         }
     }
+}
+
+i64 totient(i64 n){
+    i64 phi= n;
+    factorize(n);
+
+    for(pll p: factors){
+        phi= phi-phi/p.ff;
+    }
+
+    return phi;
+
 }
 
 main(){

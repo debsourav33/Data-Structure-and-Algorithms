@@ -31,8 +31,10 @@ typedef pair<int,int> pii;
 typedef pair<long long,long long> pll;
 //}
 
+const int N= 1e6+6;
+
 int n;
-vector<int> divs[100005];
+vector<int> divs[N];
 vector<i64> d;
 
 
@@ -56,6 +58,9 @@ void sieve_div(int n){
             divs[j].pb(i);
         }
     }
+
+    for(int i=1;i<=n;i++)
+        sort(all(divs[i]));
 }
 
 

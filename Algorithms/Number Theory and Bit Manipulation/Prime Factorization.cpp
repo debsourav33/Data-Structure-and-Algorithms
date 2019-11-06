@@ -31,6 +31,8 @@ typedef pair<int,int> pii;
 typedef pair<long long,long long> pll;
 //}
 
+const int N= 1e5+5;
+
 i64 n;
 vector<pll> factors;
 
@@ -52,6 +54,9 @@ void factorize(i64 n){
 
     if(n>1)  factors.pb(mp(n,1));
 }
+
+
+i64 curr[N];
 
 void sieve_factorize(i64 n){
     fr1(n)  curr[i]= i;
