@@ -40,10 +40,10 @@ typedef pair<long long,long long> pll;
 //}
 
 
+const int N= 1e5+5;
+
 #define lefts 2*at
 #define rights 2*at+1
-
-const int N= 1e5+5;
 
 int n, a[N], sum[4*N];
 
