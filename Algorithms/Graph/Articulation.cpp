@@ -1,3 +1,20 @@
+/*
+Articulation Point/Bridge Algorithm:
+
+Varibales: Discovery time array, Low time array
+
+1. Start dfs
+2. Increment global time variable and initiate discovery time to that time
+3. Initiate low to discovery time for any node for which dfs is called
+4. Recursively call dfs for each child and go back to step 2
+5. For each call returned for a child, update low to
+   low[u] = min(low[u], low[child])
+6. If for any child v, d[u] stays <= low[u], u is an Articulation Point  
+   If for any child v, d[u] stays < low[u], u-v is a Bridge
+*/
+
+
+
 #include<bits/stdc++.h>
 using namespace std;
 
